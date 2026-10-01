@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Sumatif SKI - MTs Mu'allimin NU</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#047857', // Emerald 700
+                        secondary: '#065f46'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header id="main-header" class="bg-primary text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div id="logo-container" class="bg-white text-primary p-2 rounded-full font-bold text-xl w-10 h-10 flex items-center justify-center shadow">
+                    NU
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl tracking-wide">MTs MU'ALLIMIN NU</h1>
+                    <p class="text-xs text-emerald-100">Asesmen Sumatif Sejarah Kebudayaan Islam (SKI) Kelas VII</p>
+                </div>
+            </div>
+            <div id="header-user-info" class="hidden text-sm text-right">
+                <p id="nav-nama" class="font-semibold"></p>
+                <p id="nav-role" class="text-xs text-emerald-200"></p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl w-full mx-auto p-4 md:p-6 my-auto flex-grow">
+
+        <!-- ================= PAGE: LOGIN ================= -->
+        <section id="page-login" class="bg-white rounded-xl shadow-lg p-6 md:p-8 max-w-md mx-auto border border-gray-100">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-primary">Login Asesmen</h2>
+                <p class="text-sm text-gray-500 mt-1">Silakan masuk sesuai peran Anda (Siswa / Admin)</p>
+            </div>
+
+            <!-- Tab Selector -->
+            <div class="flex border-b mb-6">
+                <button onclick="switchLoginTab('siswa')" id="tab-btn-siswa" class="flex-1 py-2 text-center font-semibold text-primary border-b-2 border-primary transition">Siswa</button>
+                <button onclick="switchLoginTab('admin')" id="tab-btn-admin" class="flex-1 py-2 text-center font-semibold text-gray-400 border-b-2 border-transparent transition">Admin / Guru</button>
+            </div>
+
+            <!-- Form Siswa -->
+            <form id="form-login-siswa" onsubmit="handleLoginSiswa(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                    <input type="text" id="siswa-nama" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Masukkan nama lengkap">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                    <input type="text" id="siswa-kelas" value="VII" readonly class="w-full px-3 py-2 border rounded-lg bg-gray-100 text-gray-600 font-semibold cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Presensi (Password)</label>
+                    <input type="number" id="siswa-presensi" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Contoh: 15">
+                    <p class="text-xs text-gray-500 mt-1">Nomor presensi digunakan sebagai password Anda.</p>
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-semibold py-2.5 rounded-lg transition shadow">Mulai Mengerjakan</button>
+            </form>
+
+            <!-- Form Admin -->
+            <form id="form-login-admin" onsubmit="handleLoginAdmin(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Username Admin</label>
+                    <input type="text" id="admin-user" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Username standar (admin)">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password Admin</label>
+                    <input type="password" id="admin-pass" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Password standar (admin123)">
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-semibold py-2.5 rounded-lg transition shadow">Masuk Dashboard Admin</button>
+            </form>
+        </section>
+
+        <!-- ================= PAGE: INSTRUKSI SISWA ================= -->
+        <section id="page-instruksi" class="bg-white rounded-xl shadow-lg p-6 md:p-8 max-w-2xl mx-auto hidden border border-gray-100">
+            <h2 class="text-2xl font-bold text-primary mb-4">Tata Tertib & Ketentuan Ujian</h2>
+            <div class="bg-emerald-50 border-l-4 border-primary p-4 mb-6 rounded-r-lg text-sm space-y-2">
+                <p><strong>Penyusun:</strong> Amirotul Kayyisah, S.Pd.</p>
+                <p><strong>Mata Pelajaran:</strong> Sejarah Kebudayaan Islam (SKI) Kelas VII</p>
+                <p><strong>Materi:</strong> Bab 1 & Bab 2 Daulah Abbasiyah</p>
+                <p><strong>Jumlah Soal:</strong> 35 Soal (15 PG, 10 PG Kompleks, 10 Menjodohkan)</p>
+                <p><strong>Waktu Pengerjaan:</strong> 90 Menit</p>
+                <p><strong>KKM:</strong> 80</p>
+                <p><strong>Ketentuan Kesempatan:</strong> Anda hanya diberikan maksimal <strong>2 kali</strong> kesempatan pengerjaan.</p>
+            </div>
+            <div class="flex justify-between items-center">
+                <span id="info-sisa-kesempatan" class="text-sm font-semibold text-gray-600"></span>
+                <button onclick="mulaiUjian()" class="bg-primary hover:bg-secondary text-white font-semibold px-6 py-2.5 rounded-lg transition shadow">Lanjutkan ke Soal</button>
+            </div>
+        </section>
+
+        <!-- ================= PAGE: UJIAN SISWA ================= -->
+        <section id="page-ujian" class="hidden space-y-6">
+            <!-- Top Bar Ujian (Timer & Progress) -->
+            <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row justify-between items-center gap-3 sticky top-4 z-10 border">
+                <div>
+                    <span class="text-xs text-gray-500 uppercase tracking-wider block">Siswa / Peserta</span>
+                    <span id="ujian-info-nama" class="font-bold text-gray-800"></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg font-mono font-bold text-sm border border-red-200">
+                        ⏱️ Sisa Waktu: <span id="timer-display">90:00</span>
+                    </div>
+                    <button onclick="konfirmasiSelesai()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-1.5 rounded-lg text-sm transition shadow">Akhiri & Kumpul</button>
+                </div>
+            </div>
+
+            <!-- Kontainer Soal -->
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-100">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                    <span id="soal-nomor-label" class="font-bold text-primary text-lg">Soal No. 1</span>
+                    <span id="soal-tipe-label" class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded font-medium">Pilihan Ganda</span>
+                </div>
+
+                <div id="soal-content" class="mb-6 text-gray-700 text-base leading-relaxed">
+                    <!-- Teks Soal Dimuat Disini -->
+                </div>
+
+                <div id="soal-options-container" class="space-y-3 mb-8">
+                    <!-- Opsi Jawaban Dimuat Disini -->
+                </div>
+
+                <!-- Navigasi Soal -->
+                <div class="flex justify-between items-center pt-4 border-t">
+                    <button onclick="navigasiSoal(-1)" id="btn-prev" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg text-sm transition">&larr; Sebelumnya</button>
+                    <div id="pagination-dots" class="hidden md:flex space-x-1 overflow-x-auto max-w-xs py-1">
+                        <!-- Indikator Nomor -->
+                    </div>
+                    <button onclick="navigasiSoal(1)" id="btn-next" class="px-4 py-2 bg-primary hover:bg-secondary text-white font-semibold rounded-lg text-sm transition">Selanjutnya &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE: HASIL & DOWNLOAD SISWA ================= -->
+        <section id="page-hasil" class="bg-white rounded-xl shadow-lg p-6 md:p-8 max-w-xl mx-auto hidden border border-gray-100 text-center space-y-6">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-100 text-primary mb-2 text-3xl font-bold" id="hasil-badge">
+                🎉
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Ujian Telah Selesai</h2>
+                <p class="text-sm text-gray-500 mt-1">Berikut adalah hasil asesmen sumatif SKI Anda.</p>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-xl border space-y-2 text-left">
+                <p class="flex justify-between text-sm"><span class="text-gray-500">Nama Lengkap:</span> <strong id="res-nama"></strong></p>
+                <p class="flex justify-between text-sm"><span class="text-gray-500">Kelas / No. Presensi:</span> <strong id="res-kelas-presensi"></strong></p>
+                <p class="flex justify-between text-sm"><span class="text-gray-500">Jumlah Jawaban Benar:</span> <strong id="res-benar"></strong></p>
+                <p class="flex justify-between text-sm"><span class="text-gray-500">Nilai Akhir:</span> <strong id="res-skor" class="text-xl text-primary"></strong></p>
+                <p class="flex justify-between text-sm"><span class="text-gray-500">Status Kelulusan (KKM 80):</span> <span id="res-status" class="px-2 py-0.5 rounded text-xs font-bold"></span></p>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="downloadSertifikat()" class="flex-1 bg-primary hover:bg-secondary text-white font-semibold py-2.5 rounded-lg transition shadow">📥 Download Hasil / Sertifikat</button>
+                <button onclick="location.reload()" class="px-4 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition text-sm">Keluar</button>
+            </div>
+        </section>
+
+        <!-- ================= PAGE: DASHBOARD ADMIN / GURU ================= -->
+        <section id="page-admin" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-xl shadow border gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-primary">Dashboard Admin & Guru</h2>
+                    <p class="text-xs text-gray-500">Kelola bank soal, logo, uji coba siswa, dan ubah sandi.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchAdminTab('rekap')" class="px-3 py-1.5 bg-emerald-100 text-primary font-semibold rounded-lg text-sm transition">Rekap Nilai Siswa</button>
+                    <button onclick="switchAdminTab('bank')" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg text-sm transition">Edit Bank Soal</button>
+                    <button onclick="switchAdminTab('pengaturan')" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg text-sm transition">Pengaturan & Logo</button>
+                    <button onclick="location.reload()" class="px-3 py-1.5 bg-red-100 text-red-600 font-semibold rounded-lg text-sm transition">Logout</button>
+                </div>
+            </div>
+
+            <!-- Tab Rekap Nilai -->
+            <div id="admin-tab-rekap" class="bg-white rounded-xl shadow p-6 border space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-lg text-gray-800">Daftar Nilai Siswa</h3>
+                    <button onclick="simulasiSebagaiSiswa()" class="bg-primary hover:bg-secondary text-white text-xs px-3 py-1.5 rounded-lg font-semibold transition shadow">🔍 Uji Coba Soal (Sebagai Siswa)</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-700 border-b">
+                                <th class="p-3">No</th>
+                                <th class="p-3">Nama Siswa</th>
+                                <th class="p-3">Kelas</th>
+                                <th class="p-3">Presensi</th>
+                                <th class="p-3">Percobaan Ke-</th>
+                                <th class="p-3">Nilai</th>
+                                <th class="p-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-rekap-body">
+                            <!-- Diisi via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Edit Bank Soal -->
+            <div id="admin-tab-bank" class="bg-white rounded-xl shadow p-6 border space-y-4 hidden">
+                <h3 class="font-bold text-lg text-gray-800">Kelola / Edit Soal Asesmen (Bab 1 & 2 Daulah Abbasiyah)</h3>
+                <p class="text-xs text-gray-500">Anda dapat mengubah redaksi soal atau opsi jawaban di bawah ini.</p>
+                <div id="admin-list-soal" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                    <!-- List soal edit via JS -->
+                </div>
+                <button onclick="simpanBankSoal()" class="bg-primary hover:bg-secondary text-white font-semibold px-4 py-2 rounded-lg text-sm transition">Simpan Perubahan Soal</button>
+            </div>
+
+            <!-- Tab Pengaturan & Logo -->
+            <div id="admin-tab-pengaturan" class="bg-white rounded-xl shadow p-6 border space-y-6 hidden max-w-xl">
+                <div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Ganti Password Admin</h3>
+                    <form onsubmit="handleGantiPassword(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Password Baru</label>
+                            <input type="password" id="admin-new-pass" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Password baru admin">
+                        </div>
+                        <button type="submit" class="bg-primary hover:bg-secondary text-white font-semibold px-4 py-2 rounded-lg text-sm transition">Perbarui Password</button>
+                    </form>
+                </div>
+                <hr>
+                <div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Ubah Logo / Identitas Singkat</h3>
+                    <form onsubmit="handleGantiLogo(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Teks/Inisial Logo Header (Cth: NU, MTs)</label>
+                            <input type="text" id="input-logo-text" value="NU" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <button type="submit" class="bg-primary hover:bg-secondary text-white font-semibold px-4 py-2 rounded-lg text-sm transition">Perbarui Logo</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t py-4 text-center text-xs text-gray-500">
+        Asesmen Sumatif SKI Kelas VII &bull; Disusun oleh <strong>Amirotul Kayyisah, S.Pd.</strong> &bull; MTs Mu'allimin NU
+    </footer>
+
+    <!-- JavaScript Aplikasi -->
+    <script>
+        // ================= DATA DEFAULT & BANK SOAL (35 Soal) =================
+        let appConfig = {
+            adminUser: "admin",
+            adminPass: "admin123",
+            logoText: "NU"
+        };
+
+        // Bank 35 Soal: 15 PG (A-D), 10 PG Kompleks, 10 Menjodohkan
+        let defaultBankSoal = [
+            // --- PILIHAN GANDA (1 - 15) ---
+            {
+                id: 1, tipe: 'pg',
+                soal: "Pendiri Daulah Abbasiyah yang menjadi khalifah pertama adalah...",
+                opsi: ["Abu al-Abbas as-Saffah", "Abu Ja'far al-Mansur", "Harun al-Rasyid", "Abdullah al-Ma'mun"],
+                kunci: 0
+            },
+            {
+                id: 2, tipe: 'pg',
+                soal: "Kota yang dipilih dan dibangun sebagai pusat pemerintahan baru oleh Khalifah Abu Ja'far al-Mansur adalah...",
+                opsi: ["Damaskus", "Baghdad", "Kairo", "Kuffah"],
+                kunci: 1
+            },
+            {
+                id: 3, tipe: 'pg',
+                soal: "Puncak keemasan kekhalifahan Daulah Abbasiyah dalam bidang ilmu pengetahuan, ekonomi, dan kebudayaan tercapai pada masa pemerintahan khalifah...",
+                opsi: ["Al-Mu'tashim", "Harun al-Rasyid", "Al-Watsiq", "Abu al-Abbas as-Saffah"],
+                kunci: 1
+            },
+            {
+                id: 4, tipe: 'pg',
+                soal: "Lembaga perpustakaan, pusat penerjemahan, dan akademi sains termasyhur yang didirikan pada masa Daulah Abbasiyah adalah...",
+                opsi: ["Bait al-Hikmah", "Dar al-Ilmi", "Madrasah Nizamiyah", "Dar al-Hikmah"],
+                kunci: 0
+            },
+            {
+                id: 5, tipe: 'pg',
+                soal: "Faktor utama yang menyebabkan runtuhnya kekuasaan Daulah Umayyah dan membuka jalan bagi berdirinya Daulah Abbasiyah adalah...",
+                opsi: ["Adanya serangan bangsa Mongol secara tiba-tiba", "Ketidakpuasan kelompok non-Arab (Mawali) dan keturunan Bani Hasyim atas diskriminasi penguasa Umayyah", "Bencana alam yang melanda pusat kota Damaskus", "Krisis pangan yang berkepanjangan di Jazirah Arab"],
+                kunci: 1
+            },
+            {
+                id: 6, tipe: 'pg',
+                soal: "Nama 'Abbasiyah' diambil dari nama salah satu paman Nabi Muhammad SAW yaitu...",
+                opsi: ["Abbas bin Abdul Muthalib", "Abu Thalib bin Abdul Muthalib", "Hamzah bin Abdul Muthalib", "Abdullah bin Abdul Muthalib"],
+                kunci: 0
+            },
+            {
+                id: 7, tipe: 'pg',
+                soal: "Strategi politik yang dilakukan oleh Abu Ja'far al-Mansur untuk memperkuat stabilitas negara di awal pemerintahan Abbasiyah adalah...",
+                opsi: ["Memindahkan ibu kota dari Damaskus ke Baghdad serta menumpas pemberontakan internal", "Melakukan ekspansi militer besar-besaran ke wilayah Eropa Barat", "Menutup seluruh jalur perdagangan internasional", "Membubarkan seluruh lembaga keilmuan yang ada"],
+                kunci: 0
+            },
+            {
+                id: 8, tipe: 'pg',
+                soal: "Tokoh astronom muslim terkenal pada masa Daulah Abbasiyah yang menulis karya monumental tentang aljabar adalah...",
+                opsi: ["Al-Khawarizmi", "Ibnu Sina", "Al-Kindi", "Jabir bin Hayyan"],
+                kunci: 0
+            },
+            {
+                id: 9, tipe: 'pg',
+                soal: "Gerakan penerjemahan buku-buku berbahasa asing (Yunani, Persia, India) ke dalam bahasa Arab mengalami kemajuan pesat terutama pada masa pemerintahan...",
+                opsi: ["Harun al-Rasyid dan al-Ma'mun", "Abu al-Abbas as-Saffah", "Al-Mansur", "Al-Mu'tashim"],
+                kunci: 0
+            },
+            {
+                id: 10, tipe: 'pg',
+                soal: "Pusat kota Baghdad pada masa keemasan Abbasiyah dikenal dengan sebutan 'Kota Bundar' karena...",
+                opsi: ["Tata letak kotanya dirancang melingkar dikelilingi benteng pertahanan dan parit", "Seluruh penduduknya tinggal di bangunan berbentuk lingkaran", "Kotanya dibangun di atas pulau berbentuk lingkaran di tengah sungai Tigris", "Jalan raya utamanya melingkar tanpa ujung"],
+                kunci: 0
+            },
+            {
+                id: 11, tipe: 'pg',
+                soal: "Bidang kedokteran mengalami kemajuan luar biasa berkat karya tulis kedokteran 'Al-Qanun fi at-Tibb' yang disusun oleh...",
+                opsi: ["Ibnu Sina (Avicenna)", "Al-Razi (Rhazes)", "Ibnu Rusyd", "Al-Zahrawi"],
+                kunci: 0
+            },
+            {
+                id: 12, tipe: 'pg',
+                soal: "Peran penting Bait al-Hikmah di Baghdad dalam peradaban Islam adalah sebagai...",
+                opsi: ["Pusat riset ilmiah, perpustakaan agung, dan tempat penerjemahan naskah kuno", "Markas pasukan militer khusus penjaga khalifah", "Tempat penimbunan harta kekayaan negara", "Pusat pelatihan juru dakwah"],
+                kunci: 0
+            },
+            {
+                id: 13, tipe: 'pg',
+                soal: "Salah satu pemicu dinamika dan kemajuan intelektual pada masa Daulah Abbasiyah adalah adanya semangat...",
+                opsi: ["Toleransi akademik, keterbukaan terhadap ilmu pengetahuan luar, dan kebebasan berpikir yang bertanggung jawab", "Isolasi budaya dari bangsa-bangsa non-Islam", "Penolakan total terhadap sains Yunani", "Dominasi mutlak satu mazhab fikih tanpa dialog"],
+                kunci: 0
+            },
+            {
+                id: 14, tipe: 'pg',
+                soal: "Ilmuwan muslim dalam bidang kimia yang dikenal sebagai bapak kimia modern awal adalah...",
+                opsi: ["Jabir bin Hayyan", "Al-Battani", "Al-Farabi", "Ibn al-Haitham"],
+                kunci: 0
+            },
+            {
+                id: 15, tipe: 'pg',
+                soal: "Akhir dari kekuasaan Daulah Abbasiyah di Baghdad ditandai secara tragis pada tahun 1258 M oleh peristiwa...",
+                opsi: ["Invasi dan penghancuran kota Baghdad oleh pasukan Mongol di bawah pimpinan Hulagu Khan", "Serangan mendadak tentara Salib dari Eropa", "Pemberontakan internal suku Badui di padang pasir", "Krisis kelaparan hebat selama bertahun-tahun"],
+                kunci: 0
+            },
+
+            // --- PILIHAN GANDA KOMPLEKS (16 - 25) [Jawaban benar lebih dari satu] ---
+            {
+                id: 16, tipe: 'kompleks',
+                soal: "Pilih dua faktor utama yang mendorong lahir dan berdirinya Daulah Abbasiyah:",
+                opsi: [
+                    "Dukungan kuat dari golongan Mawali (muslim non-Arab) yang merasa didiskriminasi Bani Umayyah",
+                    "Kemenangan militer keturunan Abbas dalam propaganda dan pemberontakan terhadap kekhalifahan Umayyah",
+                    "Kesepakatan damai antara Bani Umayyah dan keluarga Abbasiyah untuk berbagi kekuasaan",
+                    "Bantuan militer langsung dari kerajaan Bizantium"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 17, tipe: 'kompleks',
+                soal: "Siapakah khalifah-khalifah yang memegang peranan sangat penting pada masa awal dan keemasan Daulah Abbasiyah? (Pilih dua)",
+                opsi: [
+                    "Abu Ja'far al-Mansur",
+                    "Harun al-Rasyid",
+                    "Muawiyah bin Abi Sufyan",
+                    "Marwan bin Muhammad"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 18, tipe: 'kompleks',
+                soal: "Pilih dua karya besar atau kontribusi penting dari lembaga Bait al-Hikmah di Baghdad:",
+                opsi: [
+                    "Menjadi pusat penerjemahan karya ilmiah berbahasa asing ke dalam bahasa Arab",
+                    "Menyimpan ratusan ribu koleksi buku dari berbagai disiplin ilmu",
+                    "Berfungsi sebagai pabrik senjata militer utama Daulah Abbasiyah",
+                    "Menjadi pusat latihan militer pasukan berkuda"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 19, tipe: 'kompleks',
+                soal: "Tokoh-tokoh ilmuwan muslim terkemuka di bidang sains dan kedokteran pada masa Daulah Abbasiyah meliputi: (Pilih dua)",
+                opsi: [
+                    "Al-Khawarizmi (Matematika/Aljabar)",
+                    "Ibnu Sina (Kedokteran)",
+                    "Imam Malik bin Anas (Pendiri Mazhab)",
+                    "Hasan al-Banna"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 20, tipe: 'kompleks',
+                soal: "Pilih dua karakteristik kota Baghdad pada masa keemasan Daulah Abbasiyah:",
+                opsi: [
+                    "Dirancang dengan tata kota melingkar (Kota Bundar)",
+                    "Menjadi pusat perdagangan internasional dan pertemuan para ilmuwan dunia",
+                    "Merupakan kota pelabuhan laut terbesar di Laut Tengah",
+                    "Hanya dihuni oleh bangsawan keturunan Arab murni"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 21, tipe: 'kompleks',
+                soal: "Bidang ilmu pengetahuan apa saja yang mengalami perkembangan paling pesat dan gemilang pada masa Daulah Abbasiyah? (Pilih dua)",
+                opsi: [
+                    "Ilmu Kedokteran dan Farmasi",
+                    "Astronomi dan Matematika",
+                    "Ilmu Kelautan purba",
+                    "Teknologi persenjataan nuklir"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 22, tipe: 'kompleks',
+                soal: "Pilih dua alasan mengapa pemindahan ibu kota dari Damaskus ke Baghdad dinilai sangat strategis:",
+                opsi: [
+                    "Baghdad berada di jalur perdagangan utama antara timur dan barat",
+                    "Dekat dengan basis pendukung kuat Bani Abbasiyah di Persia dan Irak",
+                    "Damaskus mengalami tenggelam akibat banjir bandang",
+                    "Baghdad dikelilingi oleh gurun pasir yang tidak bisa ditembus musuh"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 23, tipe: 'kompleks',
+                soal: "Kontribusi Al-Khawarizmi dalam perkembangan ilmu pengetahuan meliputi: (Pilih dua)",
+                opsi: [
+                    "Menemukan dan merumuskan ilmu Aljabar",
+                    "Mempopulerkan penggunaan angka nol dalam sistem bilangan",
+                    "Menciptakan mesin uap pertama di dunia",
+                    "Menulis kitab fikih mazhab Hanafi"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 24, tipe: 'kompleks',
+                soal: "Faktor-faktor yang mendukung suburnya iklim ilmiah pada masa Daulah Abbasiyah adalah: (Pilih dua)",
+                opsi: [
+                    "Dukungan finansial dan penghargaan tinggi dari para khalifah terhadap para ilmuwan",
+                    "Tersedianya sarana perpustakaan umum dan akademi yang memadai",
+                    "Larangan mutlak mempelajari ilmu dari luar tradisi Islam",
+                    "Sistem kasta yang ketat bagi para penuntut ilmu"
+                ],
+                kunci: [0, 1]
+            },
+            {
+                id: 25, tipe: 'kompleks',
+                soal: "Pilih dua dampak positif dari gerakan penerjemahan besar-besaran pada masa Daulah Abbasiyah:",
+                opsi: [
+                    "Memperkaya khazanah intelektual dunia Islam dengan sains klasik",
+                    "Menjadikan bahasa Arab sebagai bahasa sains dan lingua franca internasional",
+                    "Memusnahkan seluruh kebudayaan lokal di wilayah taklukan",
+                    "Menghentikan seluruh kajian tafsir Al-Quran dan Hadis"
+                ],
+                kunci: [0, 1]
+            },
+
+            // --- MENJODOHKAN (26 - 35) ---
+            {
+                id: 26, tipe: 'menjodohkan',
+                soal: "Pasangkan tokoh pendiri Daulah Abbasiyah dengan gelarnya:",
+                pertanyaan: "Abu al-Abbas",
+                pilihanPasangan: ["As-Saffah", "Al-Mansur", "Al-Rasyid", "Al-Ma'mun"],
+                kunciPasangan: 0
+            },
+            {
+                id: 27, tipe: 'menjodohkan',
+                soal: "Pasangkan pendiri Kota Baghdad dengan namanya:",
+                pertanyaan: "Khalifah kedua Abbasiyah",
+                pilihanPasangan: ["Abu Ja'far al-Mansur", "Harun al-Rasyid", "Al-Mu'tashim", "Al-Watsiq"],
+                kunciPasangan: 0
+            },
+            {
+                id: 28, tipe: 'menjodohkan',
+                soal: "Pasangkan penemu ilmu aljabar dengan namanya:",
+                pertanyaan: "Bapak Aljabar",
+                pilihanPasangan: ["Al-Khawarizmi", "Al-Kindi", "Al-Razi", "Ibnu Sina"],
+                kunciPasangan: 0
+            },
+            {
+                id: 29, tipe: 'menjodohkan',
+                soal: "Pasangkan lembaga ilmu pengetahuan agung Abbasiyah dengan namanya:",
+                pertanyaan: "Pusat penerjemahan dan perpustakaan",
+                pilihanPasangan: ["Bait al-Hikmah", "Dar al-Arqam", "Masjid Nabawi", "Dar al-Imarah"],
+                kunciPasangan: 0
+            },
+            {
+                id: 30, tipe: 'menjodohkan',
+                soal: "Pasangkan penulis kitab kedokteran Al-Qanun fi at-Tibb:",
+                pertanyaan: "Ibnu...",
+                pilihanPasangan: ["Sina", "Rusyd", "Khaldun", "Batutah"],
+                kunciPasangan: 0
+            },
+            {
+                id: 31, tipe: 'menjodohkan',
+                soal: "Pasangkan nama julukan kota Baghdad:",
+                pertanyaan: "Kota...",
+                pilihanPasangan: ["Bundar", "Cahaya", "Seribu Menara", "Bunga"],
+                kunciPasangan: 0
+            },
+            {
+                id: 32, tipe: 'menjodohkan',
+                soal: "Pasangkan pemimpin pasukan Mongol yang meruntuhkan Baghdad tahun 1258 M:",
+                pertanyaan: "Hulagu...",
+                pilihanPasangan: ["Khan", "Pasha", "Sultan", "Emir"],
+                kunciPasangan: 0
+            },
+            {
+                id: 33, tipe: 'menjodohkan',
+                soal: "Pasangkan kelompok muslim non-Arab pendukung Abbasiyah:",
+                pertanyaan: "Golongan...",
+                pilihanPasangan: ["Mawali", "Anshar", "Muhajirin", "Quraisy"],
+                kunciPasangan: 0
+            },
+            {
+                id: 34, tipe: 'menjodohkan',
+                soal: "Pasangkan ilmuwan bidang kimia terkenal:",
+                pertanyaan: "Jabir bin...",
+                pilihanPasangan: ["Hayyan", "Sina", "Tariq", "Malik"],
+                kunciPasangan: 0
+            },
+            {
+                id: 35, tipe: 'menjodohkan',
+                soal: "Pasangkan paman Nabi SAW yang menjadi asal usul nama dinasti:",
+                pertanyaan: "Abbas bin...",
+                pilihanPasangan: ["Abdul Muthalib", "Abu Thalib", "Abdullah", "Umar"],
+                kunciPasangan: 0
+            }
+        ];
+
+        // ================= STATE APLIKASI =================
+        let bankSoal = JSON.parse(localStorage.getItem('ski_bank_soal')) || defaultBankSoal;
+        let riwayatNilai = JSON.parse(localStorage.getItem('ski_riwayat_nilai')) || [];
+        
+        let currentUser = null; // { nama, kelas, presensi, role }
+        let currentSoalIndex = 0;
+        let userAnswers = {}; // Menyimpan jawaban siswa
+        let timerInterval = null;
+        let sisaWaktuDetik = 90 * 60; // 90 menit
+
+        // ================= FUNGSI NAVIGASI & LOGIN =================
+        function switchLoginTab(role) {
+            const btnSiswa = document.getElementById('tab-btn-siswa');
+            const btnAdmin = document.getElementById('tab-btn-admin');
+            const formSiswa = document.getElementById('form-login-siswa');
+            const formAdmin = document.getElementById('form-login-admin');
+
+            if(role === 'siswa') {
+                btnSiswa.className = "flex-1 py-2 text-center font-semibold text-primary border-b-2 border-primary transition";
+                btnAdmin.className = "flex-1 py-2 text-center font-semibold text-gray-400 border-b-2 border-transparent transition";
+                formSiswa.classList.remove('hidden');
+                formAdmin.classList.add('hidden');
+            } else {
+                btnAdmin.className = "flex-1 py-2 text-center font-semibold text-primary border-b-2 border-primary transition";
+                btnSiswa.className = "flex-1 py-2 text-center font-semibold text-gray-400 border-b-2 border-transparent transition";
+                formAdmin.classList.remove('hidden');
+                formSiswa.classList.add('hidden');
+            }
+        }
+
+        function handleLoginSiswa(e) {
+            e.preventDefault();
+            const nama = document.getElementById('siswa-nama').value.trim();
+            const kelas = document.getElementById('siswa-kelas').value;
+            const presensi = document.getElementById('siswa-presensi').value.trim();
+
+            if(!nama || !presensi) return alert("Lengkapi data diri Anda!");
+
+            // Cek batasan pengerjaan maksimal 2 kali
+            let userAttempts = riwayatNilai.filter(r => r.nama.toLowerCase() === nama.toLowerCase() && r.presensi === presensi);
+            if(userAttempts.length >= 2) {
+                alert("Maaf, Anda telah mencapai batas maksimal 2 kali kesempatan mengerjakan asesmen ini.");
+                return;
+            }
+
+            currentUser = {
+                nama, kelas, presensi, role: 'siswa',
+                attemptCount: userAttempts.length + 1
+            };
+
+            document.getElementById('page-login').classList.add('hidden');
+            document.getElementById('page-instruksi').classList.remove('hidden');
+            document.getElementById('info-sisa-kesempatan').innerText = `Kesempatan ke-${currentUser.attemptCount} dari 2 kali kesempatan.`;
+            
+            updateHeaderNav();
+        }
+
+        function handleLoginAdmin(e) {
+            e.preventDefault();
+            const u = document.getElementById('admin-user').value.trim();
+            const p = document.getElementById('admin-pass').value.trim();
+
+            let savedConfig = JSON.parse(localStorage.getItem('ski_config')) || appConfig;
+
+            if(u === savedConfig.adminUser && p === savedConfig.adminPass) {
+                currentUser = { nama: "Administrator", role: 'admin' };
+                document.getElementById('page-login').classList.add('hidden');
+                document.getElementById('page-admin').classList.remove('hidden');
+                updateHeaderNav();
+                renderAdminRekap();
+                renderAdminBankSoal();
+            } else {
+                alert("Username atau Password Admin salah!");
+            }
+        }
+
+        function updateHeaderNav() {
+            const info = document.getElementById('header-user-info');
+            info.classList.remove('hidden');
+            document.getElementById('nav-nama').innerText = currentUser.nama;
+            document.getElementById('nav-role').innerText = currentUser.role === 'admin' ? 'Administrator' : `Kelas ${currentUser.kelas} • Presensi: ${currentUser.presensi}`;
+        }
+
+        // ================= UJIAN SISWA =================
+        function mulaiUjian() {
+            document.getElementById('page-instruksi').classList.add('hidden');
+            document.getElementById('page-ujian').classList.remove('hidden');
+            document.getElementById('ujian-info-nama').innerText = `${currentUser.nama} (Presensi: ${currentUser.presensi})`;
+
+            currentSoalIndex = 0;
+            userAnswers = {};
+            sisaWaktuDetik = 90 * 60;
+
+            startTimer();
+            renderSoal();
+            renderPaginationDots();
+        }
+
+        function startTimer() {
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                sisaWaktuDetik--;
+                let m = Math.floor(sisaWaktuDetik / 60);
+                let s = sisaWaktuDetik % 60;
+                document.getElementById('timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+                if(sisaWaktuDetik <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu pengerjaan habis!");
+                    selesaikanUjian();
+                }
+            }, 1000);
+        }
+
+        function renderSoal() {
+            const soal = bankSoal[currentSoalIndex];
+            document.getElementById('soal-nomor-label').innerText = `Soal No. ${currentSoalIndex + 1} dari ${bankSoal.length}`;
+            
+            let tipeLabel = "Pilihan Ganda";
+            if(soal.tipe === 'kompleks') tipeLabel = "Pilihan Ganda Kompleks (Pilih 2 Jawaban)";
+            if(soal.tipe === 'menjodohkan') tipeLabel = "Soal Menjodohkan";
+            document.getElementById('soal-tipe-label').innerText = tipeLabel;
+
+            document.getElementById('soal-content').innerText = soal.soal;
+
+            const optContainer = document.getElementById('soal-options-container');
+            optContainer.innerHTML = '';
+
+            if(soal.tipe === 'pg') {
+                soal.opsi.forEach((opt, idx) => {
+                    let checked = userAnswers[currentSoalIndex] === idx ? 'checked' : '';
+                    optContainer.innerHTML += `
+                        <label class="flex items-start p-3 border rounded-lg hover:bg-emerald-50 cursor-pointer transition">
+                            <input type="radio" name="pg_answer" value="${idx}" ${checked} onclick="simpanJawaban(${currentSoalIndex}, ${idx})" class="mt-1 mr-3 text-primary focus:ring-primary">
+                            <span class="text-sm text-gray-700"><strong>${String.fromCharCode(65 + idx)}.</strong> ${opt}</span>
+                        </label>
+                    `;
+                });
+            } else if(soal.tipe === 'kompleks') {
+                if(!userAnswers[currentSoalIndex]) userAnswers[currentSoalIndex] = [];
+                soal.opsi.forEach((opt, idx) => {
+                    let checked = userAnswers[currentSoalIndex].includes(idx) ? 'checked' : '';
+                    optContainer.innerHTML += `
+                        <label class="flex items-start p-3 border rounded-lg hover:bg-emerald-50 cursor-pointer transition">
+                            <input type="checkbox" value="${idx}" ${checked} onclick="simpanJawabanKompleks(${currentSoalIndex}, ${idx})" class="mt-1 mr-3 text-primary rounded focus:ring-primary">
+                            <span class="text-sm text-gray-700"><strong>${String.fromCharCode(65 + idx)}.</strong> ${opt}</span>
+                        </label>
+                    `;
+                });
+            } else if(soal.tipe === 'menjodohkan') {
+                let currentAns = userAnswers[currentSoalIndex] !== undefined ? userAnswers[currentSoalIndex] : '';
+                let html = `<p class="text-sm font-medium text-gray-600 mb-2">Pertanyaan: <em>${soal.pertanyaan}</em></p>`;
+                html += `<div class="space-y-2">`;
+                soal.pilihanPasangan.forEach((pas, idx) => {
+                    let checked = currentAns === idx ? 'checked' : '';
+                    html += `
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-emerald-50 cursor-pointer transition">
+                            <input type="radio" name="match_answer" value="${idx}" ${checked} onclick="simpanJawaban(${currentSoalIndex}, ${idx})" class="mr-3 text-primary focus:ring-primary">
+                            <span class="text-sm text-gray-700"><strong>${idx + 1}.</strong> ${pas}</span>
+                        </label>
+                    `;
+                });
+                html += `</div>`;
+                optContainer.innerHTML = html;
+            }
+
+            // Tombol Navigasi
+            document.getElementById('btn-prev').style.visibility = currentSoalIndex === 0 ? 'hidden' : 'visible';
+            document.getElementById('btn-next').innerText = currentSoalIndex === bankSoal.length - 1 ? 'Selesai' : 'Selanjutnya →';
+            
+            updatePaginationDotsActive();
+        }
+
+        function simpanJawaban(soalIdx, val) {
+            userAnswers[soalIdx] = val;
+            updatePaginationDotsActive();
+        }
+
+        function simpanJawabanKompleks(soalIdx, val) {
+            if(!userAnswers[soalIdx]) userAnswers[soalIdx] = [];
+            let arr = userAnswers[soalIdx];
+            let indexInArr = arr.indexOf(val);
+            if(indexInArr > -1) {
+                arr.splice(indexInArr, 1);
+            } else {
+                if(arr.length >= 2) {
+                    alert("Anda hanya dapat memilih maksimal 2 jawaban!");
+                    renderSoal();
+                    return;
+                }
+                arr.push(val);
+            }
+            updatePaginationDotsActive();
+        }
+
+        function navigasiSoal(dir) {
+            let nextIndex = currentSoalIndex + dir;
+            if(nextIndex >= 0 && nextIndex < bankSoal.length) {
+                currentSoalIndex = nextIndex;
+                renderSoal();
+            } else if(nextIndex >= bankSoal.length) {
+                konfirmasiSelesai();
+            }
+        }
+
+        function renderPaginationDots() {
+            const container = document.getElementById('pagination-dots');
+            container.innerHTML = '';
+            bankSoal.forEach((_, idx) => {
+                container.innerHTML += `
+                    <button onclick="gotoSoal(${idx})" id="dot-${idx}" class="w-7 h-7 text-xs font-bold rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                        ${idx + 1}
+                    </button>
+                `;
+            });
+        }
+
+        function updatePaginationDotsActive() {
+            bankSoal.forEach((_, idx) => {
+                const dot = document.getElementById(`dot-${idx}`);
+                if(!dot) return;
+                let isAnswered = false;
+                if(userAnswers[idx] !== undefined) {
+                    if(Array.isArray(userAnswers[idx]) && userAnswers[idx].length > 0) isAnswered = true;
+                    else if(!Array.isArray(userAnswers[idx])) isAnswered = true;
+                }
+
+                if(idx === currentSoalIndex) {
+                    dot.className = "w-7 h-7 text-xs font-bold rounded bg-primary text-white ring-2 ring-emerald-300 transition";
+                } else if(isAnswered) {
+                    dot.className = "w-7 h-7 text-xs font-bold rounded bg-emerald-600 text-white transition";
+                } else {
+                    dot.className = "w-7 h-7 text-xs font-bold rounded bg-gray-200 text-gray-700 transition";
+                }
+            });
+        }
+
+        function gotoSoal(idx) {
+            currentSoalIndex = idx;
+            renderSoal();
+        }
+
+        function konfirmasiSelesai() {
+            if(confirm("Apakah Anda yakin ingin mengakhiri ujian dan mengirimkan jawaban?")) {
+                selesaikanUjian();
+            }
+        }
+
+        function selesaikanUjian() {
+            if(timerInterval) clearInterval(timerInterval);
+
+            // Hitung Skor
+            let benarCount = 0;
+            bankSoal.forEach((soal, idx) => {
+                let ans = userAnswers[idx];
+                if(ans === undefined) return;
+
+                if(soal.tipe === 'pg' || soal.tipe === 'menjodohkan') {
+                    if(ans === soal.kunci) benarCount++;
+                } else if(soal.tipe === 'kompleks') {
+                    if(Array.isArray(ans) && Array.isArray(soal.kunci)) {
+                        let match = ans.length === soal.kunci.length && ans.every(val => soal.kunci.includes(val));
+                        if(match) benarCount++;
+                    }
+                }
+            });
+
+            // Total soal 35, skala nilai 100
+            let skorAkhir = Math.round((benarCount / bankSoal.length) * 100);
+            let statusLulus = skorAkhir >= 80 ? "LULUS (TUNTAS)" : "BELUM TUNTAS";
+
+            // Simpan ke riwayat
+            let hasilRecord = {
+                nama: currentUser.nama,
+                kelas: currentUser.kelas,
+                presensi: currentUser.presensi,
+                percobaan: currentUser.attemptCount,
+                benar: benarCount,
+                total: bankSoal.length,
+                skor: skorAkhir,
+                status: statusLulus,
+                tanggal: new Date().toLocaleDateString('id-ID')
+            };
+
+            riwayatNilai.push(hasilRecord);
+            localStorage.setItem('ski_riwayat_nilai', JSON.stringify(riwayatNilai));
+
+            // Tampilkan halaman hasil
+            document.getElementById('page-ujian').classList.add('hidden');
+            document.getElementById('page-hasil').classList.remove('hidden');
+
+            document.getElementById('res-nama').innerText = currentUser.nama;
+            document.getElementById('res-kelas-presensi').innerText = `${currentUser.kelas} / No. ${currentUser.presensi}`;
+            document.getElementById('res-benar').innerText = `${benarCount} dari ${bankSoal.length} soal`;
+            document.getElementById('res-skor').innerText = skorAkhir;
+            
+            const badgeStatus = document.getElementById('res-status');
+            badgeStatus.innerText = statusLulus;
+            badgeStatus.className = skorAkhir >= 80 ? "px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-700" : "px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700";
+        }
+
+        function downloadSertifikat() {
+            window.print();
+        }
+
+        // ================= DASHBOARD ADMIN =================
+        function switchAdminTab(tab) {
+            document.getElementById('admin-tab-rekap').classList.add('hidden');
+            document.getElementById('admin-tab-bank').classList.add('hidden');
+            document.getElementById('admin-tab-pengaturan').classList.add('hidden');
+
+            if(tab === 'rekap') document.getElementById('admin-tab-rekap').classList.remove('hidden');
+            if(tab === 'bank') document.getElementById('admin-tab-bank').classList.remove('hidden');
+            if(tab === 'pengaturan') document.getElementById('admin-tab-pengaturan').classList.remove('hidden');
+        }
+
+        function renderAdminRekap() {
+            const tbody = document.getElementById('tabel-rekap-body');
+            tbody.innerHTML = '';
+            if(riwayatNilai.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-400">Belum ada siswa yang mengerjakan asesmen.</td></tr>`;
+                return;
+            }
+            riwayatNilai.forEach((r, idx) => {
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">${idx + 1}</td>
+                        <td class="p-3 font-semibold">${r.nama}</td>
+                        <td class="p-3">${r.kelas}</td>
+                        <td class="p-3">${r.presensi}</td>
+                        <td class="p-3 text-center">${r.percobaan}</td>
+                        <td class="p-3 font-bold text-primary">${r.skor}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${r.skor >= 80 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">${r.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderAdminBankSoal() {
+            const container = document.getElementById('admin-list-soal');
+            container.innerHTML = '';
+            bankSoal.forEach((soal, idx) => {
+                container.innerHTML += `
+                    <div class="p-4 border rounded-lg bg-gray-50 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sm text-primary">Soal No. ${idx + 1} (${soal.tipe.toUpperCase()})</span>
+                        </div>
+                        <input type="text" id="edit-soal-${idx}" value="${soal.soal}" class="w-full p-2 border rounded text-sm bg-white">
+                    </div>
+                `;
+            });
+        }
+
+        function simpanBankSoal() {
+            bankSoal.forEach((soal, idx) => {
+                const val = document.getElementById(`edit-soal-${idx}`).value.trim();
+                if(val) soal.soal = val;
+            });
+            localStorage.setItem('ski_bank_soal', JSON.stringify(bankSoal));
+            alert("Perubahan bank soal berhasil disimpan!");
+        }
+
+        function handleGantiPassword(e) {
+            e.preventDefault();
+            const newP = document.getElementById('admin-new-pass').value.trim();
+            if(!newP) return;
+            appConfig.adminPass = newP;
+            localStorage.setItem('ski_config', JSON.stringify(appConfig));
+            alert("Password admin berhasil diubah!");
+            document.getElementById('admin-new-pass').value = '';
+        }
+
+        function handleGantiLogo(e) {
+            e.preventDefault();
+            const textLogo = document.getElementById('input-logo-text').value.trim();
+            if(!textLogo) return;
+            appConfig.logoText = textLogo;
+            localStorage.setItem('ski_config', JSON.stringify(appConfig));
+            document.getElementById('logo-container').innerText = textLogo;
+            alert("Logo / Inisial berhasil diperbarui!");
+        }
+
+        function simulasiSebagaiSiswa() {
+            currentUser = {
+                nama: "[Uji Coba Guru] Amirotul Kayyisah",
+                kelas: "VII",
+                presensi: "00",
+                role: 'siswa',
+                attemptCount: 1
+            };
+            document.getElementById('page-admin').classList.add('hidden');
+            document.getElementById('page-ujian').classList.remove('hidden');
+            document.getElementById('ujian-info-nama').innerText = `${currentUser.nama} (Mode Uji Coba Guru)`;
+            currentSoalIndex = 0;
+            userAnswers = {};
+            sisaWaktuDetik = 90 * 60;
+            startTimer();
+            renderSoal();
+            renderPaginationDots();
+            updateHeaderNav();
+        }
+
+        // Inisialisasi awal logo jika tersimpan
+        window.addEventListener('DOMContentLoaded', () => {
+            let savedCfg = JSON.parse(localStorage.getItem('ski_config'));
+            if(savedCfg && savedCfg.logoText) {
+                appConfig = savedCfg;
+                document.getElementById('logo-container').innerText = appConfig.logoText;
+            }
+        });
+    </script>
+</body>
+</html>
